@@ -14,10 +14,23 @@ void draw(){
     glColor3f(1.0, 1.0, 1.0);
 
     glBegin(GL_POINTS);
-        glVertex3f(0.5f, 0.5f, -0.5f);
-        glVertex3f(1.5f, 0.5f, -0.5f);
+        glVertex3f(0.0f, 0.0f, -5.0f);
+        glVertex3f(0.7f, 0.5f, -0.5f);
     glEnd();
     glutSwapBuffers();
+}
+
+void Resize(int width, int height){
+    //Mostra Opengl como mapear para tela
+    glViewport(0, 0, width, height);
+    //Altera pra configuraçao da camera perpectiva
+    glMatrixMode(GL_PROJECTION);
+    //Define a perpectiva da camera
+    glLoadIdentity(); //Reseta a camera
+    gluPerspective(45.0,                            // angulo da camera
+                   (double)width / (double)height,  // Aspect ratio
+                   1.0,                             // coord z proxima
+                   200.0);                          // coord z + distante
 }
 
 int main(int argc, char** argv){
@@ -30,7 +43,7 @@ int main(int argc, char** argv){
     init();
 
     glutDisplayFunc(draw);
-
+    glutReshapeFunc(Resize);
     glutMainLoop();
     return 0;
 }
