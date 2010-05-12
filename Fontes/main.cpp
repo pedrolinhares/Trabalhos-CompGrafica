@@ -1,4 +1,5 @@
 #include <GL/glut.h>
+#include "Todasmalhas.h"
 
 void init(){
     glEnable(GL_DEPTH_TEST);
@@ -13,10 +14,12 @@ void draw(){
 
     glColor3f(1.0, 1.0, 1.0);
 
-    glBegin(GL_POINTS);
-        glVertex3f(0.0f, 0.0f, -5.0f);
-        glVertex3f(0.7f, 0.5f, -0.5f);
-    glEnd();
+//    glBegin(GL_POINTS);
+//        glVertex3f(0.0f, 0.0f, -5.0f);
+//        glVertex3f(0.7f, 0.5f, -0.5f);
+//    glEnd();
+    Malhas::Malha malhaExemplo();
+    malhaExemplo.plotarPontos();
     glutSwapBuffers();
 }
 
