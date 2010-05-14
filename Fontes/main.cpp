@@ -2,10 +2,12 @@
 #include "Todasmalhas.h"
 
 void init(){
+    glPointSize(2.0);
     glEnable(GL_DEPTH_TEST);
 }
 
 void draw(){
+    Malhas::Malha malhaExemplo;
     glColor3f(0.0, 0.0, 0.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -18,7 +20,6 @@ void draw(){
 //        glVertex3f(0.0f, 0.0f, -5.0f);
 //        glVertex3f(0.7f, 0.5f, -0.5f);
 //    glEnd();
-    Malhas::Malha malhaExemplo();
     malhaExemplo.plotarPontos();
     glutSwapBuffers();
 }

@@ -1,5 +1,5 @@
-#ifndef MALHAS_H
-#define MALHAS_H
+#ifndef TODASMALHAS_H
+#define TODASMALHAS_H
 
 namespace Malhas{
     class Ponto{
@@ -8,6 +8,7 @@ namespace Malhas{
         double z;
     public:
         Ponto(double _x, double _y, double _z):x(_x), y(_y), z(_z){};
+        Ponto(){};
         double Getx(){return x;};
         double Gety(){return y;};
         double Getz(){return z;};
@@ -20,6 +21,6 @@ namespace Malhas{
         Malha();
         void plotarPontos();
     };
-};
+}
 
 #endif
