@@ -50,7 +50,7 @@ Malhas::Malha::Malha(){
     std::cout << Pontos.size1() << "\t" << Pontos.size2() << std::endl;
     for(int i = 0; i < Pontos.size1(); i++){
         for(int j = 0; j < Pontos.size2(); j++){
-            Ponto ponto(x, y, -5.0+j);
+            Ponto ponto(x, y, -5.0);
             Pontos(i, j) = ponto;
             y += 0.3;
         }
