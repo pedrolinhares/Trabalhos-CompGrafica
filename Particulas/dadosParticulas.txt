@@ -1,0 +1,14 @@
+dt 0.01
+g 9.8
+
+particula
+posicao 20,10,10
+velocidade 1,1,1
+forca 0,0,0
+massa 60.0
+
+particula
+posicao 10,10,10
+velocidade 1,1,1
+forca 1,-1,-1
+massa 40.0
