@@ -1,7 +1,7 @@
+from sys         import argv
 from OpenGL.GL   import *
 from OpenGL.GLUT import *
 from OpenGL.GLU  import *
-from sys         import argv
 
 class Particula:
     def __init__(self, _posicao, _velocidade, _forca, _massa):
@@ -57,41 +57,59 @@ class ParSys:
                     if len(linha) > 1:
                         massa = linha[1].split()
                         massa = float(massa[0])
-                        print (massa)
-                        print (type(massa))
                     self.particulas.append(Particula(valoresPosicao, valoresVelocidade, valoresForca, massa ) )
                     lendoParticula = False
+    
+    def displayParticulas(self):
+        glBegin(GL_POINTS)
+        for particula in self.particulas:
+            glVertex3f(particula.posicao[0], particula.posicao[1], particula.posicao[2])
+        glEnd()
+        glutSwapBuffers()
 
-def init(self):
-    glClearColor(1.0, 1.0, 1.0)
-    glMatrixMode(GL_PROJECTION)
-    glLoadIdentity()
-    gluOrtho2D(0.0, 600.0, 0.0, 800.0)
+class Interface:
+    def __init__(self):
+        self.particulas = ParSys("dadosParticulas.txt")
+
+    def init(self):
+        glClearColor(0.0, 0.0, 0.0, 1.0)
+        glMatrixMode(GL_PROJECTION)
+        glEnable(GL_DEPTH_TEST) 
+        glMatrixMode(GL_PROJECTION)
+        glLoadIdentity()
+        glOrtho(-100.0,   
+                 100.0,  
+                -100.0, 
+                 100.0,
+                 1.0,    #znear
+                 200.0)  #zfar
+        glMatrixMode(GL_MODELVIEW)
+        glLoadIdentity()
+        gluLookAt(150, 150, 150, 0, 0, 0, 0, 50, 0);
 
 
-def display(self):
-    glClear(GL_COLOR_BUFFER_BIT)
-    glColor3f(0.0, 0.0, 0.0)
-#    glBegin(GL_POINTS)
-#    glVertex2i(100, 50)
-#    glVertex21(100, 130)
-#    glEnd()
+    def display(self):
+        glClear(GL_COLOR_BUFFER_BIT)
+        glColor3f(1.0, 1.0, 1.0)
 
-    glFlush()
+        self.particulas.displayParticulas()
+
+        glutSwapBuffers()
                     
+    def main(self):
+        glutInit(argv)
+        
+        #Para resolver problema de falha de segmentacao - criar uma janela gambiarra
+        glutCreateWindow("Gambiarra")
+        glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB)
+        glutInitWindowSize(500, 500)
+        glutCreateWindow("Malhas 3D")
+        self.init()
+        glutDisplayFunc(self.display)
+        
+        glutMainLoop()
+
+
 if __name__ == "__main__":
-    glutInit(argv)
-    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH)
-    print "3"
-    glutInitWindowSize(600, 800)
-    print "4"
-    glutInitPosition(100, 100)
-    glutCreateWindow("Malhas 3D")
-
-    init()
-    
-    glutDisplayFunc(display)
-    
-    
-    glutMainLoop()
-                    
+    interface = Interface()
+    interface.main()

@@ -1,7 +1,6 @@
-#include <iostream>
 #include <fstream>
-#include <GL/glut.h>
 #include <vector>
+#include <GL/glut.h>
 
 struct Vertices{
     float coordX;  
@@ -19,81 +18,46 @@ typedef Face Faces;
 
 int readFile(char* fileStr);
 
-std::vector<Faces> facesGlobal;
+std::vector<Faces> globalFaces;
 
 void init(){
     glEnable(GL_DEPTH_TEST); //Habilita variavel de estado pra habilitar 3D quando uma coisa estah na frente de outra
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glOrtho(-3.0,    //esquerdo em x
-             3.0,    //direito em x
-            -3.0,    //bottom em y
-             3.0,    //top em y
-             1.0,    //near
-             20.0);  //far
+    glOrtho(-10.0,    //esquerdo em x
+             10.0,    //direito em x
+            -10.0,    //bottom em y
+             10.0,    //top em y
+             -5.0,    //znear
+             20.0);  //zfar
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    gluLookAt(4, 4, 4, 0, 1, 0, 0, 1, 0);
+    gluLookAt(15, 15, 15, 0, 0, 0, 0, 1, 0);
 }
 
 void handleResize(int w, int h) {
-	//glViewport(0, 0, w, h);
-//	glMatrixMode(GL_PROJECTION); //indicado usar somente aqui...eu acho
-//	glLoadIdentity();            //carrega matrix identidade para transformaçoes
-//	gluPerspective(45.0f, (double)w / (double)h, 1.0, 200.0);   //ponto de vista do olho..
-
+/*Tratar o aumento da tela aqui.*/
 }
 
-float _angle = 30.f;
-float _cameraAngle = 0.0f;
+float _angle = 0.f;
 
 void draw(){
-
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-
-    //glColor3f(0.0,1.0,1.0);
-
-    glRotatef(_angle,0.0f,0.0f,1.0f);
-    //Começa a desenhar...
-  
-   /* glBegin(GL_TRIANGLES);
-
-	//Triangle
-	glVertex3f(2.3f, 1.0f, -5.0f);
-	glVertex3f(1.0f, -2.0f, -5.0f);
-	glVertex3f(-2.5f, 0.5f, 5.0f); */
-	/*glVertex3f(-0.5f, -0.5f, -5.0f);
-	glVertex3f(0.5f, -0.5f, -5.0f);
-	glVertex3f(-0.5f, 0.0f, -5.0f);*/
-
-//	glEnd(); 
-    glRotatef(_angle, 0.0f, 1.0f, 0.0f);
+    glRotatef(_angle, 1.0f, 1.0f, 0.0f);
+    
     //Faces obtidas lendo arquivo
-    glBegin(GL_LINE_STRIP);
-        for(int i = 0; i < facesGlobal.size(); i++){
-           // std::cout << "face " << i << std::endl;
-            for(int j = 0; j < facesGlobal[i].vertices.size(); j++){
-                glVertex3f(facesGlobal[i].vertices[j].coordX, facesGlobal[i].vertices[j].coordY, facesGlobal[i].vertices[j].coordZ);
-                //std::cout << facesGlobal[i].vertices[j].coordX <<  facesGlobal[i].vertices[j].coordY <<  facesGlobal[i].vertices[j].coordZ << std::endl;
+        for(int i = 0; i < globalFaces.size(); i++){
+            glBegin(GL_LINE_LOOP);
+            for(int j = 0; j < globalFaces[i].vertices.size(); j++){
+                glVertex3f(globalFaces[i].vertices[j].coordX, globalFaces[i].vertices[j].coordY, globalFaces[i].vertices[j].coordZ);
             }
+            glEnd();
         }
-    glEnd();
 
-/*
-	glBegin(GL_QUADS); //Begin quadrilateral coordinates
-
-	//Trapezoid
-	glVertex3f(-0.7f, -1.5f, -5.0f);
-	glVertex3f(0.7f, -1.5f, -5.0f);
-	glVertex3f(0.4f, -0.5f, -5.0f);
-	glVertex3f(-0.4f, -0.5f, -5.0f);
-
-	glEnd(); //End quadrilateral coordinates
-*/
     glutSwapBuffers();
 }
 
@@ -126,30 +90,24 @@ int readFile(char* fileStr){
     
     fscanf(file,"%s %d", facesStr, &numFaces);
     std::vector<Faces> face(numFaces);
-    facesGlobal = face;
+    globalFaces  = face;
     for(int i = 0; i < numFaces; i++){
         fscanf(file, "%i", &numVertices);
         for(int j = 0; j < numVertices; j++){
             fscanf(file, "%i", &vertice);
-            facesGlobal[i].vertices.push_back(vertices[vertice]);
-//            std::cout << vertice << std::endl;
+            globalFaces[i].vertices.push_back(vertices[vertice]);
         }
     }
 }
 
-
-
-
-
 int main(int argc, char* argv[]){
-
     //Iniciando o Glut
     glutInit(&argc,argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 
     //Criando a janela indiscreta!
     glutInitWindowSize(500,500);
-    glutCreateWindow("Lendo do arquivo");
+    glutCreateWindow("3D Cube");
 
     //habilita GL_DEPTH_TEST
     init();
