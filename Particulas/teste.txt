@@ -1,0 +1,24 @@
+
+particula
+posicao 100,200,300
+velocidade 1,1,1
+forca 1,-1,-1
+massa 40.0
+
+particula
+posicao 150,250,300
+velocidade 1,1,1
+forca 1,0,-1
+massa 30.0
+
+particula
+posicao 190,150,300
+velocidade 1,1,1
+forca 1,0,-1
+massa 30.0
+
+particula
+posicao -100,100,100
+velocidade 1,1,1
+forca 1,0,-1
+massa 30.0
