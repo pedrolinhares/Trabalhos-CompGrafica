@@ -20,6 +20,12 @@ const double Mcpy[16] = {
 };
 
 
+const double matrixZ[16] = {
+     3.0, 2.0, 3.0, 2.0,
+     3.0, 2.5, 3.0, 3.5,
+     2.7, 3.0, 1.2, 1.7,
+     1.0, 1.5, 2.0, 3.0
+}; 
 
 void matrixInitialize(matrix<double> &M, const double M_copy[]) {
     for (int i = 0; i < M.size1(); i++)
@@ -45,17 +51,16 @@ void matrixInitialize(matrix<double> &M, const double M_copy[]) {
 Malhas::Malha::Malha(){
     matrixInitialize(M, Mcpy);
     
-    double x = -0.5;
-    double y = -0.6;
-    std::cout << Pontos.size1() << "\t" << Pontos.size2() << std::endl;
+    double x = -2.5;
+    double y = -1.6;
     for(int i = 0; i < Pontos.size1(); i++){
         for(int j = 0; j < Pontos.size2(); j++){
-            Ponto ponto(x, y, -5.0);
+            Ponto ponto(x, y, matrixZ[j * Pontos.size1() + i]);
             Pontos(i, j) = ponto;
-            y += 0.3;
+            y += 1.3;
         }
-        x  += 0.25;
-        y = -0.6;
+        x  += 1.0;
+        y = -1.6;
     }
 }
 /**************************************************************************
@@ -76,7 +81,7 @@ void Malhas::Malha::plotarPontos(){
             Mx(i,j) = Pontos(i,j).getx();
             My(i,j) = Pontos(i,j).gety();
             Mz(i,j) = Pontos(i,j).getz();
-            glBegin(GL_LINES);
+            glBegin(GL_POINTS);
                 glVertex3f(Pontos(i, j).getx(), Pontos(i, j).gety(), Pontos(i, j).getz());
             
         }
@@ -107,13 +112,13 @@ void Malhas::Malha::plotarPontos(){
             z = inner_prod(aux3, vetorVTrans);
             
             //Desenhar Pontos na tela:
-            glBegin(GL_LINES);
+            glBegin(GL_POINTS);
                 glVertex3f(x, y, z);
         }
+        glEnd();
                 
     }
  
-    glEnd();
  
     //Repetir o processo para v primeiro:
     for(v = 0.0; v <= 1.0; v += inc ){
@@ -142,9 +147,9 @@ void Malhas::Malha::plotarPontos(){
             glBegin(GL_POINTS);
                 glVertex3f(x, y, z);
         }
+        glEnd();
                 
     }
-    glEnd();
     
    glutSwapBuffers();
 
