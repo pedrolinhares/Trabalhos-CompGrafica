@@ -1,17 +1,24 @@
+#include <iostream>
 #include <fstream>
+#include <cmath>
 #include <vector>
 #include <GL/glut.h>
 
-struct Vertices{
+struct Vertice{
     float coordX;  
     float coordY;
     float coordZ;
 };
 
-typedef Vertices Vertice; 
+struct VetorNormal {
+    float coordX;
+    float coordY;
+    float coordZ;
+};
 
 struct Face{
     std::vector<Vertice> vertices;
+    VetorNormal normal;
 };
 
 typedef Face Faces;
@@ -21,7 +28,13 @@ int readFile(char* fileStr);
 std::vector<Faces> globalFaces;
 
 void init(){
-    glEnable(GL_DEPTH_TEST); //Habilita variavel de estado pra habilitar 3D quando uma coisa estah na frente de outra
+    glEnable(GL_DEPTH_TEST);     //Habilita variavel de estado pra habilitar 3D quando uma coisa estah na frente de outra
+    glEnable(GL_CULL_FACE);      //Habilita remocao de faces traseiras
+    glEnable(GL_COLOR_MATERIAL); //Habilita a definicao da cor do material a partir da cor corrente
+    glEnable(GL_LIGHTING);       //Habilita o uso de iluminacao
+    glEnable(GL_LIGHT0);         //Habilita luz de numero 0
+    glEnable(GL_DEPTH_TEST);     //Habilita o depth-buffer
+
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glOrtho(-10.0,    //esquerdo em x
@@ -29,7 +42,7 @@ void init(){
             -10.0,    //bottom em y
              10.0,    //top em y
              -5.0,    //znear
-             20.0);  //zfar
+             20.0);   //zfar
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     gluLookAt(15, 15, 15, 0, 0, 0, 0, 1, 0);
@@ -41,23 +54,59 @@ void handleResize(int w, int h) {
 
 float _angle = 0.f;
 
+void calcularVetorNormalDaFace(Face& face){
+    Vertice vetor1, vetor2;
+    Vertice vetorNormal;
+
+//Calcula vetor 1
+    vetor1.coordX = face.vertices[1].coordX - face.vertices[0].coordX;
+    vetor1.coordY = face.vertices[1].coordY - face.vertices[0].coordY;
+    vetor1.coordZ = face.vertices[1].coordZ - face.vertices[0].coordZ;
+
+//Calcula vetor 2
+    vetor2.coordX = face.vertices[3].coordX - face.vertices[0].coordX;
+    vetor2.coordY = face.vertices[3].coordY - face.vertices[0].coordY;
+    vetor2.coordZ = face.vertices[3].coordZ - face.vertices[0].coordZ;
+      
+//Calcular vetor normal entre vetor1 e vetor2
+    vetorNormal.coordX = vetor1.coordY * vetor2.coordZ - vetor1.coordZ * vetor2.coordY;
+    vetorNormal.coordY = vetor1.coordZ * vetor2.coordX - vetor1.coordX * vetor2.coordZ;
+    vetorNormal.coordZ = vetor1.coordX * vetor2.coordY - vetor1.coordY * vetor2.coordX;
+
+//Normalizar vetor normal
+  float tamanho = std::sqrt(vetorNormal.coordX * vetorNormal.coordX + vetorNormal.coordY * vetorNormal.coordY + vetorNormal.coordZ * vetorNormal.coordZ);
+  vetorNormal.coordX /= tamanho; 
+  vetorNormal.coordY /= tamanho;
+  vetorNormal.coordZ /= tamanho;
+
+//Atribui o vetor normal calculado a face
+    face.normal.coordX = vetorNormal.coordX;
+    face.normal.coordY = vetorNormal.coordY;
+    face.normal.coordZ = vetorNormal.coordZ;
+
+}
+
 void draw(){
+    float varCor = 0.0;
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
     glRotatef(_angle, 1.0f, 1.0f, 0.0f);
-    
+    glCullFace(GL_BACK);
     //Faces obtidas lendo arquivo
         for(int i = 0; i < globalFaces.size(); i++){
-            glBegin(GL_LINE_LOOP);
-            for(int j = 0; j < globalFaces[i].vertices.size(); j++){
-                glVertex3f(globalFaces[i].vertices[j].coordX, globalFaces[i].vertices[j].coordY, globalFaces[i].vertices[j].coordZ);
-            }
+            glColor3f(.1 + varCor, .9, .7);
+            glBegin(GL_QUADS);//GL_LINE_LOOP
+                glNormal3f(globalFaces[i].normal.coordX, globalFaces[i].normal.coordY, globalFaces[i].normal.coordZ);
+                for(int j = 0; j < globalFaces[i].vertices.size(); j++){
+                    glVertex3f(globalFaces[i].vertices[j].coordX, globalFaces[i].vertices[j].coordY, globalFaces[i].vertices[j].coordZ);
+                }
             glEnd();
+            varCor += .2;
         }
-
+    
     glutSwapBuffers();
 }
 
@@ -97,6 +146,9 @@ int readFile(char* fileStr){
             fscanf(file, "%i", &vertice);
             globalFaces[i].vertices.push_back(vertices[vertice]);
         }
+        calcularVetorNormalDaFace(globalFaces[i]);
+    //Imprime o vetor normal calculado para a face
+        std::cout << globalFaces[i].normal.coordX << '\t' << globalFaces[i].normal.coordY << '\t' << globalFaces[i].normal.coordZ << std::endl;
     }
 }
 

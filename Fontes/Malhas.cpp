@@ -112,7 +112,7 @@ void Malhas::Malha::plotarPontos(){
             z = inner_prod(aux3, vetorVTrans);
             
             //Desenhar Pontos na tela:
-            glBegin(GL_POINTS);
+            glBegin(GL_LINES);
                 glVertex3f(x, y, z);
         }
         glEnd();
@@ -144,7 +144,7 @@ void Malhas::Malha::plotarPontos(){
             z = inner_prod(aux3, vetorVTrans);
             
             //Desenhar Pontos na tela:
-            glBegin(GL_POINTS);
+            glBegin(GL_LINES);
                 glVertex3f(x, y, z);
         }
         glEnd();

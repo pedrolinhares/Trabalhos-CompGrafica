@@ -1,4 +1,4 @@
-dt 0.001
+dt 0.01
 g 9.8
 
 particula
@@ -7,4 +7,26 @@ velocidade 1,1,1
 forca 0,0,0
 massa 60.0
 
+particula
+posicao 100,200,300
+velocidade 1,1,10
+forca 1,-1,-1
+massa 40.0
 
+particula
+posicao 150,250,300
+velocidade -1000,1,1
+forca 1,0,-1
+massa 30.0
+
+particula
+posicao 190,150,300
+velocidade 1,1,1
+forca 1000,0,-1
+massa 30.0
+
+particula
+posicao -100,100,200
+velocidade 1,1,1
+forca 1,0,-1
+massa 30.0

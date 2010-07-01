@@ -87,7 +87,6 @@ class ParSys:
     def calcularPosicao(self, particula):
         for i in range(3):
             particula.posicao[i] += self.deslocamento * particula.velocidade[i]
-        print (particula.posicao[1])
         self.verificarColisaoInferior(particula)
 
     #verificar se posicao ultrapassa limite inferior
@@ -96,12 +95,23 @@ class ParSys:
         #calcular vetor (vetorV) entre a posicao da particula e o chao
         vetorV = []
         pontoInferior = [-self.largura/2, -self.altura/2, self.znear]
+        paredeEsquerda = -self.largura/2
+        paredeDireita = self.largura/2
         for i in range(3):
             vetorV.append(particula.posicao[i] - pontoInferior[i])
         altura = vetorV[1]
         #o y no chao estah em 180.00 ... nao sei porque
-        if(altura < 70):
-            print "passou do chao ... corrigir isso!"
+        if(altura < 75):
+            particula.voltarAoEstadoAnterior()
+            particula.velocidade[1] = particula.velocidade[1] * -1.0
+
+        if(particula.posicao[0] < paredeEsquerda):
+            particula.voltarAoEstadoAnterior()
+            particula.velocidade[0] = particula.velocidade[0] * -1.0
+
+        if(particula.posicao[0] > paredeDireita):
+            particula.voltarAoEstadoAnterior()
+            particula.velocidade[0] = particula.velocidade[0] * -1.0
 
     def animar(self):
         for particula in self.particulas:
@@ -113,7 +123,7 @@ class ParSys:
         self.displayParticulas()
 
     def displayParticulas(self):
-        glPointSize(3.0)
+        glPointSize(4.0)
         glColor3f(1.0, 0., 0.0)
         glBegin(GL_POINTS)
         for particula in self.particulas:
@@ -155,9 +165,6 @@ class Interface:
         glClear(GL_COLOR_BUFFER_BIT)
         glColor3f(1.0, 1.0, 1.0)
         
-        glBegin(GL_POINTS)
-        glVertex3f(0, 0, 0)
-        glEnd()
         #Chao
         glBegin(GL_POLYGON)
         glVertex3f(-self.w/2,-self.h/2, self.znear)
@@ -165,14 +172,23 @@ class Interface:
         glVertex3f(self.w/2,-self.h/2, self.zfar)
         glVertex3f(-self.w/2,-self.h/2, self.zfar)
         glEnd()
-
-        #parede esquerda
-        glBegin(GL_POLYGON)
-        glVertex3f(self.w/2,-self.h/2, self.znear)
-        glVertex3f(self.w/2,self.h/2, self.znear)
-        glVertex3f(self.w/2,self.h/2, self.zfar)
-        glVertex3f(self.w/2,-self.h/2, self.zfar)
-        glEnd()
+#
+#        #parede esquerda
+#        glBegin(GL_POLYGON)
+#        glVertex3f(self.w/2,-self.h/2, self.znear)
+#        glVertex3f(self.w/2,self.h/2, self.znear)
+#        glVertex3f(self.w/2,self.h/2, self.zfar)
+#        glVertex3f(self.w/2,-self.h/2, self.zfar)
+#        glEnd()
+#
+#        #parede direita
+#        glBegin(GL_POLYGON)
+#        glVertex3f(-self.w/2,self.h/2, self.znear)
+#        glVertex3f(-self.w/2,-self.h/2, self.znear)
+#        glVertex3f(-self.w/2,-self.h/2, self.zfar)
+#        glVertex3f(-self.w/2,self.h/2, self.zfar)
+#        glEnd()
+        
     
         #self.particulas.displayParticulas()
         self.particulas.animar()
@@ -191,7 +207,7 @@ class Interface:
         glutCreateWindow("Gambiarra")
         glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB)
         glutInitWindowSize(self.w, self.h)
-        glutCreateWindow("Malhas 3D")
+        glutCreateWindow("Particulas em 3D")
         self.init()
         glutDisplayFunc(self.display)
         glutReshapeFunc(self.reshape)
