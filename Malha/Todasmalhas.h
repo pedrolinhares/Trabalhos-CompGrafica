@@ -28,6 +28,7 @@ namespace Malhas{
     public: 
         Malha();
         void plotarPontos();
+        void setMatrix(int);
     };
 }
 
