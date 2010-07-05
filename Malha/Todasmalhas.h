@@ -1,3 +1,12 @@
+/*************************************************************************
+ * NOME: Todasmalhas.h 
+ * DESCRICAO: Define a o namespace Malhas que contem as classes Ponto e 
+ * Malha.
+ * AUTOR: Pedro Henrique Linhares Mota da Silva  
+ * E-mail: pedrolmota@gmail.com 
+ * DATA: 05/07/2010
+ * ***********************************************************************/
+
 #ifndef TODASMALHAS_H
 #define TODASMALHAS_H
 
